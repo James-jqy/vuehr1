@@ -20,19 +20,24 @@ Vue.prototype.putRequest = putRequest;
 Vue.prototype.deleteRequest = deleteRequest;
 Vue.prototype.getRequest = getRequest;
 
-Vue.use(ElementUI);
+Vue.use(ElementUI,{size:'small'});
 
 Vue.config.productionTip = false
 
 //全局前置导航守卫
 router.beforeEach((to, from, next)=>{
-  //在这里可以进行判断，如果符合要放行的条件，再去执行next方法。
-  if (to.path == "/"){
-    next();
-  }else{
-    initMenu(router,store);
-    next();
-  }
+    //在这里可以进行判断，如果符合要放行的条件，再去执行next方法。
+    if (to.path == "/"){
+      next();
+    }else{
+      if (window.sessionStorage.getItem("user")){
+        initMenu(router,store);
+        next();
+      }else {
+        next('/?redirect=' + to.path);
+      }
+    }
+
 })
 
 new Vue({

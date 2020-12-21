@@ -1,5 +1,6 @@
 import { Message } from 'element-ui';
 import axios from "axios";
+import router from "@/router";
 
 //这个封装一下响应。当响应码是200，进入第一个回调函数，如果是400，401,404,500... 的进入下面那个回调函数
 //但是，响应码是200不一定是业务成功了，要看服务端怎么返回。就比如说登陆的 ：
@@ -23,6 +24,8 @@ axios.interceptors.response.use(success=>{
         Message.error({message:"权限不足，请联系管理员!"});
     }else if (error.response.status == 401){
         Message.error({message:"还未登陆，请先登陆！"});
+        // 如果session失效，后端会返回401，在这里进行跳转到首页。
+        router.replace('/');
     }else {
         if (error.response.data.msg){
             Message.error({message:error.response.msg});
